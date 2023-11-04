@@ -43,7 +43,7 @@ y = data['quality'].values
 # x_train é do conjunto treino, x_test é do conjunto teste, y_train é da classe de treino, y_test é da classe de teste
 
 x_train, x_test, y_train, y_test = train_test_split(
-    x, y, test_size=0.10, train_size=0.90, random_state=7152)
+    x, y, test_size=0.30, train_size=0.70, random_state=7152)
 
 scaler = StandardScaler()  # instanciando a classe para normalizar os dados
 x_train_scaled = scaler.fit_transform(x_train)  # normalizando os dados
@@ -75,12 +75,30 @@ disp2 = ConfusionMatrixDisplay(cm2, display_labels=clf2.classes_)
 # disp2.plot()
 # plt.show()
 
+print()
 
-knn = KNeighborsClassifier(n_neighbors=1, metric='euclidean')
-knn.fit(x_train, y_train)
-y_pred_knn = knn.predict(x_test)
+# COMPARAR OS RESULTADOS DA ARVORE DE DECISÃO COM KNN
+
+knn1 = KNeighborsClassifier(n_neighbors=1, metric='euclidean')
+knn1.fit(x_train, y_train)
+y_pred_knn = knn1.predict(x_test)
 knn_acc = accuracy_score(y_test, y_pred_knn)
-print("Precisão KNN: ", knn_acc)
+print("Precisão KNN não normalizado: ", knn_acc)
+cm3 = confusion_matrix(y_test, y_pred_knn)
+disp3 = ConfusionMatrixDisplay(cm3, display_labels=knn1.classes_)
+# disp3.plot()
+# plt.show()
+
+
+knn2 = KNeighborsClassifier(n_neighbors=1, metric='euclidean')
+knn2.fit(x_train_scaled, y_train)
+y_pred_knn = knn2.predict(x_test_scaled)
+knn_acc = accuracy_score(y_test, y_pred_knn)
+print("Precisão KNN normalizado: ", knn_acc)
+cm4 = confusion_matrix(y_test, y_pred_knn)
+disp4 = ConfusionMatrixDisplay(cm4, display_labels=knn2.classes_)
+# disp4.plot()
+# plt.show()
 
 # 11º passo
 # fig = plt.figure(figsize=(50,25))
